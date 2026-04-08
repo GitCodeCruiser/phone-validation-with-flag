@@ -1,11 +1,19 @@
 {
   "name": "phone-validation-with-flag",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "A lightweight phone number input with country flag selector and dial code. Zero dependencies. Works with Vanilla JS, React, and Vue 3.",
   "keywords": [
-    "phone", "phone-input", "phone-number", "flag", "dial-code",
-    "country-code", "international", "phone-validation",
-    "react-phone-input", "vue-phone-input", "intl-phone"
+    "phone",
+    "phone-input",
+    "phone-number",
+    "flag",
+    "dial-code",
+    "country-code",
+    "international",
+    "phone-validation",
+    "react-phone-input",
+    "vue-phone-input",
+    "intl-phone"
   ],
   "homepage": "https://github.com/GitCodeCruiser/phone-validation-with-flag#readme",
   "repository": {
@@ -32,7 +40,11 @@
       "require": "./dist/vue.cjs.js"
     }
   },
-  "files": ["dist", "types", "README.md"],
+  "files": [
+    "dist",
+    "types",
+    "README.md"
+  ],
   "scripts": {
     "build": "rollup -c",
     "dev": "rollup -c -w",
