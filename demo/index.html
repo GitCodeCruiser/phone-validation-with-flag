@@ -207,6 +207,20 @@
       <div class="output"><span class="label">Status:</span><span id="out-disabled" style="color:#f59e0b">Disabled</span></div>
     </div>
 
+    <div class="card" style="grid-column: 1 / -1">
+      <div class="card-title">✅ Form Validation — Submit Button</div>
+      <div class="card-desc">Button stays disabled until the number is valid for the selected country. Use <code style="background:rgba(99,102,241,.15);padding:1px 6px;border-radius:4px;font-size:11px">isValid</code> from onChange to control your submit button.</div>
+      <div id="demo-form" class="demo-wrap" style="max-width:440px"></div>
+      <div style="margin-top:12px;display:flex;align-items:center;gap:12px;flex-wrap:wrap">
+        <button id="submit-btn" disabled
+          style="padding:10px 28px;background:linear-gradient(135deg,#6366f1,#8b5cf6);border:none;color:#fff;border-radius:8px;font-size:14px;font-weight:600;cursor:pointer;opacity:.4;transition:opacity .2s,transform .1s"
+          onclick="this.textContent='✅ Submitted!';setTimeout(()=>this.textContent='Submit',2000)"
+        >Submit</button>
+        <span id="form-hint" style="font-size:12px;color:#8888aa">Enter a valid phone number to enable submit</span>
+      </div>
+      <div class="output"><span class="label">onChange:</span><span id="out-form">—</span></div>
+    </div>
+
   </div>
 
   <!-- Code Examples -->
@@ -217,6 +231,7 @@
       <button class="tab-btn" onclick="switchTab(this,'tab-react')">React</button>
       <button class="tab-btn" onclick="switchTab(this,'tab-vue')">Vue 3</button>
       <button class="tab-btn" onclick="switchTab(this,'tab-cdn')">CDN</button>
+      <button class="tab-btn" onclick="switchTab(this,'tab-form')">Form Validation</button>
     </div>
 
     <div id="tab-vanilla" class="tab-panel active">
@@ -295,6 +310,27 @@ phone.<span class="fn">reset</span>();               <span class="cm">// clear t
   });
 &lt;/<span class="kw">script</span>&gt;</pre>
     </div>
+
+    <div id="tab-form" class="tab-panel">
+<pre><span class="cm">// Disable submit until phone is valid for the selected country</span>
+<span class="kw">const</span> submitBtn = document.<span class="fn">getElementById</span>(<span class="str">'submit-btn'</span>);
+
+<span class="kw">new</span> <span class="fn">PhoneInput</span>(<span class="str">'#my-phone'</span>, {
+  <span class="prop">defaultCountry</span>: <span class="str">'US'</span>,
+  <span class="prop">onChange</span>: (val) => {
+    submitBtn.<span class="prop">disabled</span> = !val.<span class="prop">isValid</span>;
+  },
+});
+
+<span class="cm">// React</span>
+<span class="kw">const</span> [phone, setPhone] = useState(<span class="kw">null</span>);
+&lt;<span class="fn">PhoneInputComponent</span> onChange={setPhone} /&gt;
+&lt;<span class="kw">button</span> disabled={!phone?.<span class="prop">isValid</span>}&gt;Submit&lt;/<span class="kw">button</span>&gt;
+
+<span class="cm">// Vue 3</span>
+&lt;<span class="fn">PhoneInput</span> v-model=<span class="str">"phone"</span> /&gt;
+&lt;<span class="kw">button</span> :disabled=<span class="str">"!phone?.isValid"</span>&gt;Submit&lt;/<span class="kw">button</span>&gt;</pre>
+    </div>
   </div>
 
 </main>
@@ -354,6 +390,24 @@ phone.<span class="fn">reset</span>();               <span class="cm">// clear t
     defaultCountry: 'DE',
     theme: 'auto',
     disabled: true,
+  });
+
+  // 7. Form validation — submit button
+  const submitBtn = document.getElementById('submit-btn');
+  const formHint  = document.getElementById('form-hint');
+  new PhoneInput('#demo-form', {
+    defaultCountry: 'US',
+    theme: 'auto',
+    onChange: (val) => {
+      submitBtn.disabled = !val.isValid;
+      submitBtn.style.opacity = val.isValid ? '1' : '.4';
+      submitBtn.style.cursor  = val.isValid ? 'pointer' : 'not-allowed';
+      formHint.textContent = val.isValid
+        ? '✅ Valid number — submit is enabled!'
+        : 'Enter a valid phone number to enable submit';
+      formHint.style.color = val.isValid ? '#10b981' : '#8888aa';
+      show('out-form', val);
+    },
   });
 
   // Tabs

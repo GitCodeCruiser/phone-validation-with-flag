@@ -125,6 +125,47 @@ Built-in digit-length validation per country — no extra dependencies needed.
 
 ---
 
+## Form Validation — Disable Submit Button
+
+The most common use case: keep the submit button **disabled** until the user enters a valid number for their country.
+
+### Vanilla JS
+
+```js
+const submitBtn = document.getElementById('submit-btn');
+
+new PhoneInput('#my-phone', {
+  defaultCountry: 'US',
+  onChange: (val) => {
+    submitBtn.disabled = !val.isValid;
+  },
+});
+```
+
+```html
+<button id="submit-btn" disabled>Submit</button>
+```
+
+### React
+
+```jsx
+const [phone, setPhone] = useState(null);
+
+<PhoneInputComponent onChange={setPhone} />
+<button disabled={!phone?.isValid}>Submit</button>
+```
+
+### Vue 3
+
+```vue
+<PhoneInput v-model="phone" />
+<button :disabled="!phone?.isValid">Submit</button>
+```
+
+> `isValid` is `false` when the field is empty or the digit count doesn't match the selected country's rules.
+
+---
+
 ## Options
 
 | Option | Type | Default | Description |
