@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>phone-validation-with-flag — Demo</title>
+  <meta name="description" content="Live demo of phone-validation-with-flag: a lightweight international phone input with country flag selector." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #0a0a0f;
+      --bg2: #111118;
+      --bg3: #1a1a26;
+      --border: rgba(255,255,255,.08);
+      --text: #f0f0ff;
+      --muted: #8888aa;
+      --accent: #6366f1;
+      --accent2: #818cf8;
+      --green: #34d399;
+      --card: rgba(255,255,255,.03);
+    }
+
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      line-height: 1.6;
+    }
+
+    /* Hero */
+    .hero {
+      text-align: center;
+      padding: 80px 24px 60px;
+      background: radial-gradient(ellipse 80% 50% at 50% -10%, rgba(99,102,241,.25) 0%, transparent 70%);
+      border-bottom: 1px solid var(--border);
+    }
+    .badge {
+      display: inline-flex; align-items: center; gap: 6px;
+      background: rgba(99,102,241,.15); border: 1px solid rgba(99,102,241,.3);
+      color: var(--accent2); border-radius: 100px; padding: 5px 14px;
+      font-size: 12px; font-weight: 600; letter-spacing: .05em;
+      text-transform: uppercase; margin-bottom: 24px;
+    }
+    h1 {
+      font-size: clamp(2rem, 5vw, 3.5rem); font-weight: 700;
+      letter-spacing: -.02em; margin-bottom: 16px;
+      background: linear-gradient(135deg, #fff 0%, #a5b4fc 100%);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+    }
+    .hero-sub { font-size: 1.05rem; color: var(--muted); max-width: 540px; margin: 0 auto 36px; }
+    .pills { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; margin-bottom: 40px; }
+    .pill {
+      background: rgba(255,255,255,.06); border: 1px solid var(--border);
+      border-radius: 100px; padding: 5px 14px; font-size: 13px; color: var(--muted);
+    }
+    .pill span { margin-right: 5px; }
+    .install-box {
+      display: inline-flex; align-items: center; gap: 10px;
+      background: var(--bg3); border: 1px solid var(--border);
+      border-radius: 10px; padding: 12px 20px;
+      font-family: 'JetBrains Mono', monospace; font-size: 14px; color: var(--accent2);
+    }
+    .install-box .npm { color: var(--muted); }
+    .copy-btn {
+      background: rgba(99,102,241,.15); border: none; color: var(--accent2);
+      border-radius: 6px; padding: 4px 10px; font-size: 12px; cursor: pointer; transition: background .15s;
+    }
+    .copy-btn:hover { background: rgba(99,102,241,.3); }
+
+    /* Layout */
+    .container { max-width: 960px; margin: 0 auto; padding: 60px 24px; }
+    .section-title {
+      font-size: 11px; font-weight: 700; letter-spacing: .1em;
+      text-transform: uppercase; color: var(--accent2); margin-bottom: 24px;
+    }
+    .demos {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
+      gap: 20px; margin-bottom: 60px;
+    }
+    .card {
+      background: var(--card); border: 1px solid var(--border);
+      border-radius: 16px; padding: 28px; transition: border-color .2s;
+    }
+    .card:hover { border-color: rgba(99,102,241,.3); }
+    .card-title { font-size: 14px; font-weight: 600; color: var(--text); margin-bottom: 6px; }
+    .card-desc { font-size: 12.5px; color: var(--muted); margin-bottom: 18px; }
+    .output {
+      margin-top: 14px; padding: 10px 14px;
+      background: rgba(99,102,241,.08); border: 1px solid rgba(99,102,241,.15);
+      border-radius: 8px; font-family: 'JetBrains Mono', monospace;
+      font-size: 12px; color: var(--green); min-height: 38px; word-break: break-all;
+    }
+    .output .label { color: var(--muted); margin-right: 6px; }
+
+    /* Code */
+    .code-section { margin-bottom: 60px; }
+    .tabs { display: flex; gap: 4px; margin-bottom: 16px; border-bottom: 1px solid var(--border); }
+    .tab-btn {
+      background: none; border: none; color: var(--muted); font-family: 'Inter', sans-serif;
+      font-size: 13px; font-weight: 500; padding: 8px 16px; cursor: pointer;
+      border-bottom: 2px solid transparent; transition: color .15s, border-color .15s; margin-bottom: -1px;
+    }
+    .tab-btn.active { color: var(--accent2); border-bottom-color: var(--accent2); }
+    .tab-panel { display: none; }
+    .tab-panel.active { display: block; }
+    pre {
+      background: var(--bg3); border: 1px solid var(--border); border-radius: 12px;
+      padding: 22px 24px; overflow-x: auto; font-family: 'JetBrains Mono', monospace;
+      font-size: 13px; line-height: 1.7;
+    }
+    .kw { color: #c084fc; } .fn { color: #60a5fa; } .str { color: #34d399; }
+    .cm { color: #475569; font-style: italic; } .prop { color: #f59e0b; }
+
+    footer {
+      text-align: center; padding: 40px 24px; border-top: 1px solid var(--border);
+      color: var(--muted); font-size: 13px;
+    }
+
+    .demo-wrap { width: 100%; }
+
+    @media (max-width: 500px) {
+      .demos { grid-template-columns: 1fr; }
+      h1 { font-size: 2rem; }
+    }
+  </style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="badge">📞 npm install phone-validation-with-flag</div>
+  <h1>phone-validation-with-flag</h1>
+  <p class="hero-sub">
+    A lightweight, zero-dependency international phone input with country flag selector.
+    Works with Vanilla JS, React, and Vue 3.
+  </p>
+  <div class="pills">
+    <span class="pill"><span>✅</span> Zero dependencies</span>
+    <span class="pill"><span>🌍</span> 253 countries</span>
+    <span class="pill"><span>📞</span> Dial codes</span>
+    <span class="pill"><span>🔍</span> Searchable</span>
+    <span class="pill"><span>📦</span> ESM + CJS + UMD</span>
+    <span class="pill"><span>🌙</span> Dark mode</span>
+    <span class="pill"><span>📐</span> TypeScript</span>
+  </div>
+  <div class="install-box">
+    <span class="npm">$</span>
+    <span>npm install phone-validation-with-flag</span>
+    <button class="copy-btn" onclick="copyInstall(this)">Copy</button>
+  </div>
+</header>
+
+<main class="container">
+
+  <p class="section-title">Live Demos</p>
+  <div class="demos">
+
+    <div class="card">
+      <div class="card-title">Default — US</div>
+      <div class="card-desc">Select country flag → type your number → get full international number</div>
+      <div id="demo-default" class="demo-wrap"></div>
+      <div class="output"><span class="label">onChange:</span><span id="out-default">—</span></div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Pre-selected — Pakistan 🇵🇰</div>
+      <div class="card-desc">defaultCountry: 'PK' — starts with Pakistan (+92) selected</div>
+      <div id="demo-pk" class="demo-wrap"></div>
+      <div class="output"><span class="label">onChange:</span><span id="out-pk">—</span></div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Dark Theme</div>
+      <div class="card-desc">theme: 'dark' — forced dark mode regardless of system</div>
+      <div id="demo-dark" class="demo-wrap"></div>
+      <div class="output"><span class="label">onChange:</span><span id="out-dark">—</span></div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Light Theme</div>
+      <div class="card-desc">theme: 'light' — forced light mode</div>
+      <div id="demo-light" class="demo-wrap"></div>
+      <div class="output"><span class="label">onChange:</span><span id="out-light">—</span></div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Programmatic Control</div>
+      <div class="card-desc">Use the API to set country and number externally</div>
+      <div id="demo-api" class="demo-wrap"></div>
+      <div style="display:flex;gap:8px;margin-top:12px;flex-wrap:wrap">
+        <button onclick="apiDemo.setValue('GB','7911123456')" style="flex:1;padding:7px 10px;background:rgba(99,102,241,.15);border:1px solid rgba(99,102,241,.3);color:#a5b4fc;border-radius:7px;cursor:pointer;font-size:12px">Set UK 🇬🇧</button>
+        <button onclick="apiDemo.setValue('PK','3001234567')" style="flex:1;padding:7px 10px;background:rgba(99,102,241,.15);border:1px solid rgba(99,102,241,.3);color:#a5b4fc;border-radius:7px;cursor:pointer;font-size:12px">Set PK 🇵🇰</button>
+        <button onclick="apiDemo.reset()" style="flex:1;padding:7px 10px;background:rgba(239,68,68,.1);border:1px solid rgba(239,68,68,.2);color:#fca5a5;border-radius:7px;cursor:pointer;font-size:12px">Reset</button>
+      </div>
+      <div class="output"><span class="label">getValue():</span><span id="out-api">—</span></div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Disabled State</div>
+      <div class="card-desc">disabled: true — input and dropdown are locked</div>
+      <div id="demo-disabled" class="demo-wrap"></div>
+      <div class="output"><span class="label">Status:</span><span id="out-disabled" style="color:#f59e0b">Disabled</span></div>
+    </div>
+
+  </div>
+
+  <!-- Code Examples -->
+  <p class="section-title">Code Examples</p>
+  <div class="code-section">
+    <div class="tabs">
+      <button class="tab-btn active" onclick="switchTab(this,'tab-vanilla')">Vanilla JS</button>
+      <button class="tab-btn" onclick="switchTab(this,'tab-react')">React</button>
+      <button class="tab-btn" onclick="switchTab(this,'tab-vue')">Vue 3</button>
+      <button class="tab-btn" onclick="switchTab(this,'tab-cdn')">CDN</button>
+    </div>
+
+    <div id="tab-vanilla" class="tab-panel active">
+<pre><span class="cm">// npm install phone-validation-with-flag</span>
+<span class="kw">import</span> { PhoneInput } <span class="kw">from</span> <span class="str">'phone-validation-with-flag'</span>;
+
+<span class="kw">const</span> phone = <span class="kw">new</span> <span class="fn">PhoneInput</span>(<span class="str">'#my-phone'</span>, {
+  <span class="prop">defaultCountry</span>: <span class="str">'US'</span>,
+  <span class="prop">placeholder</span>: <span class="str">'Phone number'</span>,
+  <span class="prop">theme</span>: <span class="str">'auto'</span>,       <span class="cm">// 'auto' | 'light' | 'dark'</span>
+  <span class="prop">onChange</span>: (val) =&gt; {
+    console.<span class="fn">log</span>(val.<span class="prop">full</span>);       <span class="cm">// '+923001234567'</span>
+    console.<span class="fn">log</span>(val.<span class="prop">dialCode</span>);   <span class="cm">// '+92'</span>
+    console.<span class="fn">log</span>(val.<span class="prop">number</span>);     <span class="cm">// '3001234567'</span>
+    console.<span class="fn">log</span>(val.<span class="prop">countryCode</span>);<span class="cm">// 'PK'</span>
+  },
+});
+
+<span class="cm">// Programmatic API</span>
+phone.<span class="fn">getValue</span>();             <span class="cm">// → { countryCode, dialCode, number, full }</span>
+phone.<span class="fn">setValue</span>(<span class="str">'GB'</span>, <span class="str">'7911123456'</span>);
+phone.<span class="fn">reset</span>();               <span class="cm">// clear to default</span></pre>
+    </div>
+
+    <div id="tab-react" class="tab-panel">
+<pre><span class="kw">import</span> { PhoneInputComponent } <span class="kw">from</span> <span class="str">'phone-validation-with-flag/react'</span>;
+
+<span class="kw">export function</span> <span class="fn">MyForm</span>() {
+  <span class="kw">const</span> [phone, setPhone] = useState(<span class="kw">null</span>);
+
+  <span class="kw">return</span> (
+    &lt;<span class="fn">PhoneInputComponent</span>
+      defaultCountry=<span class="str">"PK"</span>
+      placeholder=<span class="str">"Phone number"</span>
+      theme=<span class="str">"auto"</span>
+      onChange={setPhone}
+    /&gt;
+  );
+}
+
+<span class="cm">// phone = { countryCode: 'PK', dialCode: '+92', number: '...', full: '+92...' }</span></pre>
+    </div>
+
+    <div id="tab-vue" class="tab-panel">
+<pre><span class="kw">import</span> PhoneInput <span class="kw">from</span> <span class="str">'phone-validation-with-flag/vue'</span>;
+
+<span class="cm">&lt;!-- Vue 3 with v-model --&gt;</span>
+&lt;<span class="kw">script</span> setup&gt;
+<span class="kw">const</span> phone = ref(<span class="kw">null</span>);
+&lt;/<span class="kw">script</span>&gt;
+
+&lt;<span class="kw">template</span>&gt;
+  &lt;<span class="fn">PhoneInput</span>
+    v-model=<span class="str">"phone"</span>
+    default-country=<span class="str">"PK"</span>
+    theme=<span class="str">"auto"</span>
+    @change=<span class="str">"handleChange"</span>
+  /&gt;
+&lt;/<span class="kw">template</span>&gt;
+
+<span class="cm">&lt;!-- phone.value = { countryCode, dialCode, number, full } --&gt;</span></pre>
+    </div>
+
+    <div id="tab-cdn" class="tab-panel">
+<pre><span class="cm">&lt;!-- No build step needed --&gt;</span>
+&lt;<span class="kw">script</span> src=<span class="str">"https://unpkg.com/phone-validation-with-flag/dist/index.umd.js"</span>&gt;&lt;/<span class="kw">script</span>&gt;
+
+&lt;<span class="kw">div</span> id=<span class="str">"my-phone"</span>&gt;&lt;/<span class="kw">div</span>&gt;
+
+&lt;<span class="kw">script</span>&gt;
+  <span class="kw">const</span> { PhoneInput } = window.PhoneValidationWithFlag;
+
+  <span class="kw">const</span> phone = <span class="kw">new</span> <span class="fn">PhoneInput</span>(<span class="str">'#my-phone'</span>, {
+    <span class="prop">defaultCountry</span>: <span class="str">'US'</span>,
+    <span class="prop">onChange</span>: (val) =&gt; console.<span class="fn">log</span>(val.<span class="prop">full</span>),
+  });
+&lt;/<span class="kw">script</span>&gt;</pre>
+    </div>
+  </div>
+
+</main>
+
+<footer>
+  <p>MIT License · <strong>phone-validation-with-flag</strong> · Built with ❤️ for the open source community</p>
+</footer>
+
+<script src="../dist/index.umd.js"></script>
+<script>
+  const { PhoneInput } = window.PhoneValidationWithFlag;
+
+  function show(id, val) {
+    const el = document.getElementById(id);
+    el.innerHTML = JSON.stringify(val, null, 0)
+      .replace('"isValid":true', '<span style="color:#10b981">"isValid":true</span>')
+      .replace('"isValid":false', '<span style="color:#ef4444">"isValid":false</span>');
+  }
+
+  // 1. Default US
+  new PhoneInput('#demo-default', {
+    defaultCountry: 'US',
+    theme: 'auto',
+    onChange: v => show('out-default', v),
+  });
+
+  // 2. Pakistan
+  new PhoneInput('#demo-pk', {
+    defaultCountry: 'PK',
+    theme: 'auto',
+    onChange: v => show('out-pk', v),
+  });
+
+  // 3. Dark
+  new PhoneInput('#demo-dark', {
+    defaultCountry: 'GB',
+    theme: 'dark',
+    onChange: v => show('out-dark', v),
+  });
+
+  // 4. Light
+  new PhoneInput('#demo-light', {
+    defaultCountry: 'FR',
+    theme: 'light',
+    onChange: v => show('out-light', v),
+  });
+
+  // 5. API control
+  window.apiDemo = new PhoneInput('#demo-api', {
+    defaultCountry: 'US',
+    theme: 'auto',
+    onChange: v => show('out-api', v),
+  });
+
+  // 6. Disabled
+  new PhoneInput('#demo-disabled', {
+    defaultCountry: 'DE',
+    theme: 'auto',
+    disabled: true,
+  });
+
+  // Tabs
+  function switchTab(btn, id) {
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById(id).classList.add('active');
+  }
+  window.switchTab = switchTab;
+
+  function copyInstall(btn) {
+    navigator.clipboard.writeText('npm install phone-validation-with-flag').then(() => {
+      btn.textContent = 'Copied!';
+      setTimeout(() => btn.textContent = 'Copy', 2000);
+    });
+  }
+  window.copyInstall = copyInstall;
+</script>
+</body>
+</html>

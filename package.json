@@ -1,0 +1,46 @@
+{
+  "name": "phone-validation-with-flag",
+  "version": "1.0.0",
+  "description": "A lightweight phone number input with country flag selector and dial code. Zero dependencies. Works with Vanilla JS, React, and Vue 3.",
+  "keywords": [
+    "phone", "phone-input", "phone-number", "flag", "dial-code",
+    "country-code", "international", "phone-validation",
+    "react-phone-input", "vue-phone-input", "intl-phone"
+  ],
+  "homepage": "https://github.com/GitCodeCruiser/phone-validation-with-flag#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/GitCodeCruiser/phone-validation-with-flag.git"
+  },
+  "license": "MIT",
+  "author": "GitCodeCruiser",
+  "main": "dist/index.cjs.js",
+  "module": "dist/index.esm.js",
+  "browser": "dist/index.umd.js",
+  "types": "types/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/index.esm.js",
+      "require": "./dist/index.cjs.js"
+    },
+    "./react": {
+      "import": "./dist/react.esm.js",
+      "require": "./dist/react.cjs.js"
+    },
+    "./vue": {
+      "import": "./dist/vue.esm.js",
+      "require": "./dist/vue.cjs.js"
+    }
+  },
+  "files": ["dist", "types", "README.md"],
+  "scripts": {
+    "build": "rollup -c",
+    "dev": "rollup -c -w",
+    "prepare": "npm run build"
+  },
+  "devDependencies": {
+    "@rollup/plugin-node-resolve": "^15.0.0",
+    "@rollup/plugin-terser": "^1.0.0",
+    "rollup": "^4.0.0"
+  }
+}
